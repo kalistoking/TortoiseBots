@@ -53,12 +53,14 @@ bool GuildShareItemAction::Execute(Event& event)
                 return false;
             }
 
+            // As GiveItemAction (B314): the link before the move, and the row kept for the receiver's save.
+            std::string const link = chat->formatItem(item, giveCount);
             bot->MoveItemFromInventory(item->GetBagSlot(), item->GetSlot(), true);
             item->SetOwnerGuid(receiver->getObjectGuid());
-            receiver->MoveItemToInventory(dest, item, true);
+            receiver->MoveItemToInventory(dest, item, true, true);
 
             std::ostringstream receiverOut;
-            receiverOut << "Got " << chat->formatItem(item, giveCount) << " from guild member " << bot->GetName();
+            receiverOut << "Got " << link << " from guild member " << bot->GetName();
             receiverAi->TellPlayerNoFacing(receiverAi->GetMaster(), receiverOut.str(), PlayerbotSecurityLevel::PLAYERBOT_SECURITY_ALLOW_ALL, false);
         }
         else
